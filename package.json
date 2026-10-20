@@ -1,0 +1,61 @@
+{
+  "name": "@byo-oss/core",
+  "version": "0.1.0",
+  "description": "Shared helpers for better-auth plugins.",
+  "license": "MIT",
+  "author": "Jarod Stewart",
+  "type": "module",
+  "packageManager": "pnpm@12.14.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check ."
+  },
+  "keywords": [
+    "better-auth",
+    "byo",
+    "plugin",
+    "helpers"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/byo-oss/core"
+  },
+  "homepage": "https://github.com/byo-oss/core#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "better-auth": "^1.6.23"
+  },
+  "devDependencies": {
+    "@better-auth/core": "1.6.23",
+    "@better-auth/memory-adapter": "1.6.23",
+    "@biomejs/biome": "^2.5.15",
+    "@types/node": "^22",
+    "better-auth": "1.6.23",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9",
+    "vitest": "^4.1.10"
+  }
+}
