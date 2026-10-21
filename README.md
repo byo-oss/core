@@ -12,7 +12,7 @@ One event bus, one cron route and one org-cleanup call for every BYO better-auth
 npm install @byo-oss/core
 ```
 
-Peer dependency: `better-auth` `^1.6.23`.
+Peer dependency: `better-auth` `^1.7.7`.
 
 ## Setup
 

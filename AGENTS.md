@@ -4,7 +4,7 @@ Shared glue for BYO better-auth plugins: the `ByoEvent` type, an event bus, one 
 
 ## Wiring it into an app
 
-1. `npm install @byo-oss/core` (peer: `better-auth` `^1.6.23`).
+1. `npm install @byo-oss/core` (peer: `better-auth` `^1.7.7`).
 2. Events: build one handler with `createEventBus([...consumers])` and pass it as `onEvent` to every BYO plugin that takes one. Consumers run in order; one consumer's error is reported through `onError` (default `console.error`) and never reaches the plugin or the request.
 3. Background work: add one server-only route (or job) that calls `await sweepAll(auth)` and schedule it every minute. Keep `budgetMs` (default 25 000) below the platform's timeout. If the result has `hasMore: true`, more work is due, so call again soon. Errors are in `results[i].error` and also go to `onError`. Protect the route (secret header or a non-public cron).
 4. Cleanup: in the app's `organization({ organizationHooks })`, call `deleteOrganizationData(auth, organization.id)` from `afterDeleteOrganization`, and `deleteMemberData(auth, { userId: member.userId, organizationId: member.organizationId })` from `afterRemoveMember`. Both run every plugin, then throw a `ByoFanOutError` (an `AggregateError`) if any failed. Don't swallow it silently: log it, or let it fail the job so it gets retried.
