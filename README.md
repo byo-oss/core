@@ -102,7 +102,7 @@ Protect the cron route the way your scheduler expects (a shared secret header, o
 
 ```ts
 type ByoEvent = {
-  type: `${string}.${string}.${string}` // "<plugin id>.<noun>.<past-tense verb>", e.g. "support.ticket.created"
+  type: `${string}.${string}.${string}` // "<package>.<noun>.<past-tense verb>"; <package> is the package name without the scope, e.g. "support.ticket.created", "notifications.notification.created"
   occurredAt: Date
   actorId: string | null                 // a user id, or null for the system
   userId?: string                        // whom it's about, if one person

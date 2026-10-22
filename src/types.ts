@@ -10,8 +10,11 @@ import type { BetterAuthPlugin } from "better-auth";
  */
 export type ByoEvent = {
   /**
-   * `"<package id>.<noun>.<past-tense verb>"`, e.g.
-   * `"support.ticket.created"` or `"feedback.post.status_changed"`.
+   * `"<package>.<noun>.<past-tense verb>"`, where `<package>` is the package
+   * name without the `@byo-oss/` scope (not the plugin id: the notifications
+   * package has plugin id `inbox` but emits `notifications.*`), e.g.
+   * `"support.ticket.created"`, `"notifications.notification.created"` or
+   * `"feedback.post.status_changed"`.
    */
   type: `${string}.${string}.${string}`;
   /** When the change happened. */
