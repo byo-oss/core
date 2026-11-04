@@ -1,6 +1,6 @@
 {
   "name": "@byo-oss/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Shared helpers for better-auth plugins.",
   "license": "MIT",
   "author": "Jarod Stewart",
@@ -46,7 +46,7 @@
     "access": "public"
   },
   "peerDependencies": {
-    "better-auth": "^1.7.7"
+    "better-auth": "^1.7.16"
   },
   "devDependencies": {
     "@better-auth/core": "1.7.16",
