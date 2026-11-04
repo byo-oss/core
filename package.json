@@ -49,11 +49,11 @@
     "better-auth": "^1.7.7"
   },
   "devDependencies": {
-    "@better-auth/core": "1.7.7",
-    "@better-auth/memory-adapter": "1.7.7",
+    "@better-auth/core": "1.7.16",
+    "@better-auth/memory-adapter": "1.7.16",
     "@biomejs/biome": "^2.5.15",
     "@types/node": "^22",
-    "better-auth": "1.7.7",
+    "better-auth": "1.7.16",
     "tsup": "^8.5.1",
     "typescript": "^5.9",
     "vitest": "^4.1.10"
