@@ -1,0 +1,31 @@
+---
+title: Introduction
+description: The shared library for better-auth apps that run two or more BYO packages, with one event bus, one cron route and one org-cleanup call.
+group: get started
+order: 1
+---
+
+`@byo-oss/core` is the shared library for apps that run two or more BYO packages. It gives them one event bus, one cron route and one org-cleanup call, so you wire each of those once instead of once per package.
+
+> Community plugin — not affiliated with the better-auth team.
+
+It is a library, not a plugin: it adds no tables and no endpoints, and there is nothing to add to `betterAuth({ plugins })`. It reads the plugins you already pass there and calls the hooks that BYO plugins declare under a `byo` key. With a single BYO package you don't need it.
+
+## What you get
+
+- **One event bus.** `createEventBus` turns a list of consumers into the one `onEvent` handler you pass to every BYO plugin that emits events. A consumer that throws is reported and the next one still runs. See [Server API](/docs/core/api#createeventbus).
+- **One cron route.** `sweepAll` runs every plugin's background work from a single route, in plugin order, inside a time budget you set. See [Server API](/docs/core/api#sweepall).
+- **One cleanup call.** `deleteOrganizationData` and `deleteMemberData` fan out to every plugin that stores per-organization or per-member data. All plugins run, and if any failed you get a `ByoFanOutError`. See [Server API](/docs/core/api#deleteorganizationdata-and-deletememberdata).
+- **A contract for plugin authors.** A plugin declares `sweep`, `deleteOrganizationData` and `deleteMemberData` under `byo`, and core reaches them. See [Hooks for plugin authors](/docs/core/api#hooks-for-plugin-authors).
+
+## Not included (yet)
+
+- Not a job queue or scheduler: you still need one cron that calls `sweepAll`.
+- Not durable events: no outbox, no retries, no cross-process delivery.
+- No user-delete fan-out: user data goes through foreign keys and each plugin's own `databaseHooks`.
+- No data export fan-out, and no shared identity (`identify(request)`) helper yet.
+
+## Where to go next
+
+- [Quickstart](/docs/core/quickstart) wires the bus, the cron route and the cleanup hooks.
+- [Server API](/docs/core/api) lists every export and what each helper guarantees.

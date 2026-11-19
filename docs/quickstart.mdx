@@ -1,0 +1,86 @@
+---
+title: Quickstart
+description: Build one event bus, add one cron route and wire the organization cleanup hooks in an app that runs several BYO packages.
+group: get started
+order: 2
+---
+
+This takes an app that already runs two or more BYO packages to one event bus, one cron route and one cleanup fan-out. You need better-auth already set up.
+
+Requires better-auth 1.7.16+.
+
+```sh
+npm install @byo-oss/core
+```
+
+<Steps>
+
+### Build one event bus
+
+Build one `onEvent` with `createEventBus` and pass it to every BYO plugin that emits events:
+
+```ts title="lib/auth.ts"
+import { createEventBus } from "@byo-oss/core";
+
+const onEvent = createEventBus([
+  (event) => activity.record(event),
+  async (event) => {
+    if (event.type === "support.agent.replied" && event.userId) {
+      await auth.api.notify({ body: { userId: event.userId, type: event.type, title: "New reply" } });
+    }
+  },
+]);
+
+export const auth = betterAuth({
+  plugins: [support({ onEvent }), feedback({ onEvent })],
+});
+```
+
+Consumers run one after another, in the order given.
+
+### Add one cron route
+
+Add one route that calls `sweepAll`, and run it every minute from any scheduler:
+
+```ts title="app/api/cron/route.ts"
+import { sweepAll } from "@byo-oss/core";
+import { auth } from "@/lib/auth";
+
+export async function GET() {
+  const result = await sweepAll(auth, { budgetMs: 20_000 });
+  return Response.json(result);
+}
+```
+
+Protect the route the way your scheduler expects: a shared secret header, or a platform cron that isn't publicly reachable. Keep `budgetMs` below your platform's timeout.
+
+### Wire the cleanup hooks
+
+In the organization plugin's hooks, call the cleanup fan-out:
+
+```ts title="lib/auth.ts"
+import { deleteMemberData, deleteOrganizationData } from "@byo-oss/core";
+
+organization({
+  organizationHooks: {
+    afterDeleteOrganization: async ({ organization }) => {
+      await deleteOrganizationData(auth, organization.id);
+    },
+    afterRemoveMember: async ({ member }) => {
+      await deleteMemberData(auth, { userId: member.userId, organizationId: member.organizationId });
+    },
+  },
+});
+```
+
+</Steps>
+
+Leaving an organization fires no `organizationHooks`. Call `deleteMemberData` yourself after a leave if you need it, or rely on plugins that clean up through their own `/organization/leave` hook.
+
+## Check what's installed
+
+`listByoPlugins(auth)` lists each plugin id and the hooks it declares, so you can confirm core sees the plugins you expect.
+
+## Next steps
+
+- [Server API](/docs/core/api) lists every export, option and guarantee.

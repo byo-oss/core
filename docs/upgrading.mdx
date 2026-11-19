@@ -1,0 +1,17 @@
+---
+title: Upgrading
+description: What changed in each release of @byo-oss/core that you might notice.
+group: get started
+order: 3
+---
+
+Each section covers one release. Read the sections between your current version and the latest. Releases that changed nothing you could notice aren't listed.
+
+## 0.2.0
+
+No API change and no runtime change. To upgrade:
+
+- **Update better-auth.** The `better-auth` peer is now `^1.7.16` (it was `^1.7.7`). An app on an older better-auth no longer satisfies the peer range, so upgrade better-auth to 1.7.16 or newer.
+- **Event types name the package, not the plugin id.** The `ByoEvent` `type` is `"<package>.<noun>.<past-tense verb>"`, where `<package>` is the package name without the `@byo-oss/` scope. The notifications package has plugin id `inbox` but emits `notifications.*`, for example `notifications.notification.created`. Only the documentation of the type changed (it is still `${string}.${string}.${string}`), so routing code that already matches on the emitted type needs no change. If you matched on a plugin id, match on the package name.
+
+Nothing else changed.
